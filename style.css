@@ -1,0 +1,227 @@
+/* Reset & Fonts */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f4f8ff;
+  color: #222;
+  transition: background 0.3s, color 0.3s;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Hero */
+.hero {
+  background: linear-gradient(to right, #001f4d, #003366);
+  color: #fff;
+  padding: 100px 20px 70px;
+  text-align: center;
+  position: relative;
+}
+.hero-content h1 {
+  font-size: 42px;
+  margin-bottom: 15px;
+}
+.hero-content p {
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Dark Mode Toggle */
+.dark-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+.dark-toggle button {
+  background: #00ccff;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* Buttons */
+.btn {
+  padding: 12px 28px;
+  border-radius: 30px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  border: none;
+}
+.get-started {
+  background-color: #00ccff;
+  color: white;
+}
+.login {
+  background-color: transparent;
+  color: white;
+  border: 2px solid #00ccff;
+}
+.btn:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* Section Styling */
+section {
+  padding: 70px 20px;
+  text-align: center;
+}
+section h2 {
+  font-size: 32px;
+  margin-bottom: 40px;
+}
+
+/* Grid Layout */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Feature Cards */
+.feature {
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.07);
+  padding: 30px 20px;
+  transition: 0.3s ease;
+}
+.feature:hover {
+  transform: translateY(-10px);
+}
+.icon {
+  color: #0077cc;
+  margin-bottom: 15px;
+}
+
+/* Pricing Cards */
+.pricing-cards .pricing {
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 30px 20px;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.07);
+  transition: 0.3s ease;
+}
+.pricing:hover {
+  transform: translateY(-10px);
+}
+.pricing h3 {
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+.price {
+  font-size: 26px;
+  color: #0077cc;
+  margin-bottom: 20px;
+}
+.pricing ul {
+  list-style: none;
+  padding: 0;
+}
+.pricing li {
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+.pricing li i {
+  color: #00cc88;
+  margin-right: 10px;
+}
+.badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: #ff9500;
+  color: white;
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
+/* Footer */
+footer {
+  background: #001f4d;
+  color: white;
+  padding: 60px 20px 40px;
+}
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: space-between;
+}
+.footer-col {
+  flex: 1 1 250px;
+}
+.footer-col h3, .footer-col h4 {
+  margin-bottom: 15px;
+}
+.footer-col p, .footer-col li {
+  font-size: 15px;
+  margin-bottom: 10px;
+  opacity: 0.9;
+}
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+}
+.footer-col a {
+  color: #cce6ff;
+  transition: 0.3s;
+}
+.footer-col a:hover {
+  color: white;
+}
+.socials a {
+  margin-right: 15px;
+  font-size: 18px;
+  color: #cce6ff;
+}
+.socials a:hover {
+  color: white;
+}
+.footer-bottom {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+/* Dark Mode */
+body.dark {
+  background-color: #0f172a;
+  color: #f4f4f4;
+}
+body.dark .hero {
+  background: linear-gradient(to right, #0a0a23, #1e293b);
+}
+body.dark .feature,
+body.dark .pricing {
+  background-color: #1e293b;
+  color: white;
+}
+body.dark footer {
+  background: #0a0a23;
+}
+body.dark .footer-col a {
+  color: #88ccff;
+}

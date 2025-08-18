@@ -1,0 +1,833 @@
+<!-- Paste this full code into your HTML file -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WinZone Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
+  <script src="https://kit.fontawesome.com/dd6d3987dd.js" crossorigin="anonymous"></script>
+  <style>
+   * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'lato', sans-serif;
+      background-color: #f5f7fa;
+      overflow-x: hidden;
+    }
+
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 170px;
+      height: 100vh;
+      background: linear-gradient(to bottom, #002b5c, #004080);
+      color: white;
+      padding: 25px 15px;
+      transition: all 0.4s ease;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar.closed ~ .main,
+.sidebar.closed ~ .main-content {
+  margin-left: 70px;
+  width: calc(100% - 70px);
+}
+    .sidebar.closed { width: 70px; }
+    .sidebar h2 { text-align: center; margin-bottom: 40px; font-size: 22px; white-space: nowrap; }
+    .sidebar.closed h2 { display: none; }
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: white;
+      padding: 12px 10px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      transition: background 0.3s;
+      white-space: nowrap;
+    }
+    .sidebar a:hover { background-color: rgba(255,255,255,0.1); }
+    .sidebar.closed a span { display: none; }
+
+    .dropdown-link { display: flex; flex-direction: column; }
+    .dropdown-link > a { cursor: pointer; }
+    .dropdown-content {
+      display: none;
+      flex-direction: column;
+      padding-left: 25px;
+      margin-top: 5px;
+    }
+    .dropdown-content a {
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      font-size: 14px;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+    .dropdown-content a:hover { background-color: rgba(255,255,255,0.1); }
+    .dropdown-content.open { display: flex; }
+
+    /* Sidebar header with welcome and toggle */
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      white-space: nowrap;
+    }
+    .sidebar.closed .sidebar-header .wel {
+      display: none;
+    }
+    .toggle-btn {
+      font-size: 24px;
+      cursor: pointer;
+      color: white;
+    }
+ .dropdown-link { display: flex; flex-direction: column; }
+    .dropdown-link > a { cursor: pointer; }
+    .dropdown-content {
+      display: none;
+      flex-direction: column;
+      padding-left: 25px;
+      margin-top: 5px;
+    }
+    .dropdown-content a {
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      font-size: 14px;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+    .dropdown-content a:hover { background-color: rgba(255,255,255,0.1); }
+    .dropdown-content.open { display: flex; }
+     .main {
+      margin-left: 250px;
+      padding: 30px;
+      transition: margin-left 0.4s ease;
+    }
+    .main.closed { margin-left: 70px; }
+
+    .wel {
+      font-size: 18px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .hero-box {
+      margin: 30px 0;
+      background: linear-gradient(to right, #003060, #007bff);
+      color: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    
+  .stock-section {
+    display: flex;
+  gap: 15px; /* smaller than 30px */
+  justify-content: flex-start; /* remove the big center gap */
+  margin-bottom: 20px; /* tighter spacing below */
+  flex-wrap: wrap;
+}
+
+  .stock-widget {
+    background: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  .stock-large {
+    flex: 1;
+    min-width: 300px;
+  }
+
+  /* Heading with dropdown aligned right */
+  .stock-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  .stock-header h3 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+     font-size: 22px;
+  font-weight: 700;
+
+  }
+
+  .filter-dropdown {
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+
+  .card-container {
+    display: grid;
+    gap: 10px;
+  }
+
+  /* Top Sold Table */
+  #topSoldTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  #topSoldTable th, #topSoldTable td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+  }
+  #topSoldTable th {
+    background: #f0f0f0;
+  }
+
+    .stock-widget {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .stock-widget h3 {
+      color: #004080;
+      margin-bottom: 12px;
+      
+    }
+
+    .stock-large h3 {
+      font-size: 20px;
+    }
+
+    .stock-large .card h3 {
+      font-size: 20px;
+    }
+
+    .stock-large .card p {
+      font-size: 16px;
+    }
+
+   /* Make main content take the rest of the width next to the sidebar */
+.main,
+.main-content {
+  margin-left: 170px; /* match sidebar width */
+  padding: 30px;
+  transition: margin-left 0.4s ease;
+  width: calc(100% - 170px);
+  box-sizing: border-box;
+}
+
+/* Card container stays flexible */
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+  gap: 25px;
+  
+}
+
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 28px 30px;
+  box-shadow: 0 12px 20px rgba(30, 60, 114, 0.1);
+  text-align: center;
+  transition: transform 0.2s ease;
+  cursor: default;
+}
+
+/* Color variations */
+.out-of-stock {
+  background: #fff5f5;
+  border-left: 5px solid red;
+}
+
+.low-stock {
+  background: #fffbe6;
+  border-left: 5px solid orange;
+}
+
+
+    .filter-dropdown {
+      margin-bottom: 12px;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 50%;
+      font-size: 15px;
+    }
+
+    .contact-bottom {
+      position: absolute;
+      bottom: 60px;
+      left: 15px;
+      right: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+      padding: 12px 10px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    .logout-bottom {
+      position: absolute;
+      bottom: 20px;
+      left: 15px;
+      right: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+      padding: 12px 10px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+    /* Tables scroll horizontally */
+  .stock-widget table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .stock-widget th,
+  .stock-widget td {
+    padding: 8px;
+    font-size: 13px;
+  }
+
+    
+    .sidebar.closed .contact-bottom span,
+    .sidebar.closed .logout-bottom span {
+      display: none;
+    }
+
+    @media (max-width: 1024px) {
+  .main,
+  .main-content {
+    margin-left: 140px;
+    width: calc(100% - 140px);
+  }
+  .card-container {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+  .stock-section {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+}
+
+/* Mobile landscape & small tablets (<=768px) */
+@media (max-width: 768px) {
+  
+  .main,
+  .main-content {
+    margin-left: 70px;
+    width: calc(100% - 70px);
+  }
+  .stock-section {
+    flex-direction: column;
+  }
+  .stock-large {
+    min-width: 100%;
+  }
+}
+
+/* Mobile portrait (<=600px) */
+@media (max-width: 600px) {
+  body {
+    font-size: 14px;
+  }
+  .main,
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+    padding: 15px;
+  }
+  .card-container {
+    grid-template-columns: 1fr;
+  }
+  .top-sold-card {
+    width: 120px;
+    height: 120px;
+  }
+  .top-sold-units {
+    font-size: 28px;
+    width: 60px;
+    height: 60px;
+  }
+}
+
+/* Popup background */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5); /* Semi-transparent */
+  justify-content: center;
+  align-items: center;
+}
+
+/* Popup box */
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(-20px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+#topSoldCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 20px;
+}
+.top-sold-card:hover {
+  transform: scale(1.05);
+}
+
+.top-sold-units {
+  background: #004080;
+  color: white;
+  font-weight: 700;
+  font-size: 36px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+
+.top-sold-name {
+  font-weight: 600;
+  font-size: 16px;
+  color: #003060;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.top-sold-category {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 10px;
+}
+.top-sold-card {
+  position: relative; /* to position delete btn absolutely */
+  background: #e6f0ff;
+  border-radius: 50%;
+  width: 160px;
+  height: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  padding-top: 15px; /* optional to avoid overlap */
+}
+
+.top-sold-delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #ff4c4c;
+  border: none;
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: background 0.3s;
+  z-index: 10;
+}
+
+.top-sold-delete-btn:hover {
+  background: #e63939;
+}
+
+
+  </style>
+</head>
+<body>
+
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <span class="wel">Welcome,<br> Admin</span>
+    <i class="bi bi-list toggle-btn" onclick="toggleSidebar()"></i>
+  </div>
+  <a href="admin.html"><i class="bi bi-house-fill"></i> <span>Home</span></a>
+  <a href="dashboard.html"><i class="bi bi-bar-chart-fill"></i> <span>Dashboard</span></a>
+  <div class="dropdown-link">
+    <a href="javascript:void(0);" onclick="toggleDropdown('inventoryDropdown')">
+      <i class="bi bi-box-fill"></i><span>Inventory</span>
+      <i class="bi bi-chevron-down dropdown-arrow" style="margin-left:auto;"></i>
+    </a>
+    <div class="dropdown-content" id="inventoryDropdown">
+      <a href="buy.html#addstock"><span>Add Stock</span></a>
+      <a href="buy.html#currentstock"><span>Current Stock</span></a>
+      <a href="buy.html#outofstock"><span>Out of Stock</span></a>
+    </div>
+  </div>
+  <div class="dropdown-link">
+    <a href="javascript:void(0);" onclick="toggleDropdown('sellDropdown')">
+      <i class="bi bi-cart-plus-fill"></i> <span>Sell</span>
+      <i class="bi bi-chevron-down dropdown-arrow" style="margin-left:auto;"></i>
+    </a>
+    <div class="dropdown-content" id="sellDropdown">
+      <a href="sell.html"><span>Sell</span></a>
+      <a href="sell.html#invoice"><span>Invoice</span></a>
+      <a href="sell.html#quotes"><span>Quotes</span></a>
+    </div>
+  </div>
+  <div class="dropdown-link">
+    <a href="javascript:void(0);" onclick="toggleDropdown('customerDropdown')">
+      <i class="bi bi-person-plus-fill"></i> <span>Customer</span>
+      <i class="bi bi-chevron-down dropdown-arrow" style="margin-left:auto;"></i>
+    </a>
+    <div class="dropdown-content" id="customerDropdown">
+      <a href="add cust.html"><span>Add Customer</span></a>
+      <a href="add cust.html#existingcustomer"><span>Existing Customer</span></a>
+    </div>
+  </div>
+  <a class="contact-bottom" href="setting.html"><i class="bi bi-telephone-fill"></i><span>Contact us</span></a>
+  <a class="logout-bottom" href="index.html" onclick="logout()"><i class="bi bi-box-arrow-right"></i> <span>Logout</span></a>
+</div>
+  
+<div class="main" id="main">
+
+  <!-- Stock Left and Right Cards -->
+  <div class="stock-section">
+  <!-- Out of Stock -->
+  <div class="stock-widget stock-large">
+    <div class="stock-header">
+      <h3><i class="fa-solid fa-circle-xmark"></i> Out of Stock overview</h3>
+      <select class="filter-dropdown" onchange="filterCards('outOfStock',this.value)">
+        <option value="all">All Categories</option>
+      </select>
+    </div>
+    <div id="outOfStock" class="card-container"></div>
+  </div>
+
+  <!-- Low Stock Warning -->
+  <div class="stock-widget stock-large">
+    <div class="stock-header">
+      <h3><i class="fas fa-triangle-exclamation"></i> Low Stock overview</h3>
+      <select class="filter-dropdown" onchange="filterCards('lowStock',this.value)">
+        <option value="all">All Categories</option>
+      </select>
+    </div>
+    <div id="lowStock" class="card-container"></div>
+  </div>
+</div>
+
+<!-- Top Sold Products -->
+<div class="stock-widget">
+  <div class="stock-header">
+    <h3><i class="bi bi-trophy-fill"></i> Top Sold Products</h3>
+    <select class="filter-dropdown" onchange="filterTopSold(this.value)">
+      <option value="all">All Categories</option>
+    </select>
+  </div>
+  <div id="topSoldCards" class="card-container"></div>
+</div>
+<!-- Low Stock Popup -->
+<div id="lowStockModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeLowStockPopup()">&times;</span>
+    <h2>Low Stock Products</h2>
+    <ul id="lowStockList"></ul>
+  </div>
+</div>
+
+
+<script>
+
+// ---------- Utilities ----------
+function getProducts() {
+  return JSON.parse(localStorage.getItem("products") || "[]");
+}
+
+function parseNumberSafe(value) {
+  if (value === null || value === undefined) return 0;
+  const num = parseInt(String(value).replace(/[^\d]/g, ""), 10);
+  return isNaN(num) ? 0 : num;
+}
+
+function deleteProduct(productName) {
+  let products = getProducts();
+  products = products.filter(p => p.name !== productName);
+  localStorage.setItem("products", JSON.stringify(products));
+  loadStockData();
+  loadTopSoldProducts();
+}
+
+// ---------- Stock Data ----------
+function loadStockData() {
+  const all = getProducts();
+  const LOW_THRESHOLD = 5;
+
+  const outOfStock = all.filter(p => parseNumberSafe(p.stock) === 0);
+  const lowStock = all.filter(p => {
+    const stock = parseNumberSafe(p.stock);
+    return stock > 0 && stock <= LOW_THRESHOLD;
+  });
+
+  renderCards("outOfStock", outOfStock);
+  renderCards("lowStock", lowStock);
+}
+
+function renderCards(containerId, data) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = "";
+
+  const grouped = {};
+  data.forEach(p => {
+    if (!grouped[p.category]) grouped[p.category] = [];
+    grouped[p.category].push(p);
+  });
+
+  for (const cat in grouped) {
+    const div = document.createElement("div");
+    div.className = `card ${containerId === "lowStock" ? "low-stock" : "out-of-stock"}`;
+    div.dataset.category = cat;
+
+    div.innerHTML = `
+      <h4 style="font-size:34px; font-weight:700; color:#1e3c72; user-select:none">${grouped[cat].length}</h4>
+      <p style="font-size: 14px; font-weight:600; color:#667080; margin-bottom:12px; letter-spacing:0.02em; text-transform:uppercase">${cat}</p>
+    `;
+
+    div.onclick = () => {
+      if (containerId === "lowStock") {
+        showLowStockPopup(grouped[cat]);
+      } else {
+        goToOutOfStock(cat);
+      }
+    };
+
+    container.appendChild(div);
+  }
+}
+
+function filterCards(containerId, category) {
+  document.querySelectorAll(`#${containerId} .card`).forEach(card => {
+    card.style.display = category === "all" || card.dataset.category === category ? "block" : "none";
+  });
+}
+
+function goToOutOfStock(category) {
+  localStorage.setItem("selectedCategory", category);
+  window.location.href = "buy.html#outofstock";
+}
+
+// ---------- Low Stock Popup ----------
+function showLowStockPopup(products) {
+  const list = document.getElementById("lowStockList");
+  list.innerHTML = "";
+  products.forEach(p => {
+    const li = document.createElement("li");
+    li.innerHTML = `<strong>${p.name}</strong> - ${parseNumberSafe(p.stock)} left`;
+    list.appendChild(li);
+  });
+  document.getElementById("lowStockModal").style.display = "flex";
+}
+
+function closeLowStockPopup() {
+  document.getElementById("lowStockModal").style.display = "none";
+}
+
+window.onclick = function(event) {
+  const modal = document.getElementById("lowStockModal");
+  if (event.target === modal) {
+    closeLowStockPopup();
+  }
+}
+
+// ---------- Top Sold Products ----------
+function loadTopSoldProducts() {
+  const all = getProducts();
+  const topSold = all
+    .filter(p => parseNumberSafe(p.sold) > 0)
+    .sort((a, b) => parseNumberSafe(b.sold) - parseNumberSafe(a.sold))
+    .slice(0, 10);
+
+  const container = document.getElementById("topSoldCards");
+  const select = document.querySelectorAll(".filter-dropdown")[2];
+  const categories = [...new Set(all.map(p => p.category))];
+
+  // Populate filter dropdown
+  select.innerHTML = `<option value="all">All Categories</option>`;
+  categories.forEach(cat => {
+    select.innerHTML += `<option value="${cat}">${cat}</option>`;
+  });
+
+  container.innerHTML = "";
+
+  topSold.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "top-sold-card";
+    card.dataset.category = p.category;
+
+    // Delete button
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "top-sold-delete-btn";
+    deleteBtn.innerHTML = '<i class="fa fa-times"></i>';
+    deleteBtn.title = "Delete";
+    deleteBtn.addEventListener("click", e => {
+      e.stopPropagation();
+      deleteProduct(p.name);
+    });
+
+    // Units sold
+    const unitsDiv = document.createElement("div");
+    unitsDiv.className = "top-sold-units";
+    unitsDiv.textContent = parseNumberSafe(p.sold);
+
+    // Product name
+    const nameDiv = document.createElement("div");
+    nameDiv.className = "top-sold-name";
+    nameDiv.textContent = p.name;
+
+    // Category
+    const categoryDiv = document.createElement("div");
+    categoryDiv.className = "top-sold-category";
+    categoryDiv.textContent = p.category;
+
+    // Stock remaining
+    const stockDiv = document.createElement("div");
+    stockDiv.className = "top-sold-stock";
+    stockDiv.textContent = `Stock: ${parseNumberSafe(p.stock)}`;
+
+    card.append(deleteBtn, unitsDiv, nameDiv, categoryDiv, stockDiv);
+    container.appendChild(card);
+  });
+
+  // Filter top-sold products by category
+  select.addEventListener("change", function() {
+    const value = this.value;
+    document.querySelectorAll("#topSoldCards .top-sold-card").forEach(card => {
+      card.style.display = value === "all" || card.dataset.category === value ? "block" : "none";
+    });
+  });
+}
+
+// ---------- Sidebar Dropdown ----------
+function toggleSidebar() {
+  const sidebar = document.getElementById("sidebar");
+  const main = document.getElementById("main");
+  const allDropdowns = document.querySelectorAll(".dropdown-content");
+
+  sidebar.classList.toggle("closed");
+  main.classList.toggle("closed");
+
+  if (sidebar.classList.contains("closed")) {
+    // Sidebar closed - close all dropdowns and show right arrows
+    allDropdowns.forEach(d => d.classList.remove("open"));
+    document.querySelectorAll(".dropdown-arrow").forEach(icon => {
+      icon.classList.remove("bi-chevron-up", "bi-chevron-down");
+      icon.classList.add("bi-chevron-right");
+    });
+  } else {
+    // Sidebar open - update arrows based on dropdown open state
+    allDropdowns.forEach(dropdown => {
+      const arrow = dropdown.previousElementSibling?.querySelector(".dropdown-arrow");
+      if (dropdown.classList.contains("open")) {
+        arrow.classList.remove("bi-chevron-down", "bi-chevron-right");
+        arrow.classList.add("bi-chevron-up");
+      } else {
+        arrow.classList.remove("bi-chevron-up", "bi-chevron-right");
+        arrow.classList.add("bi-chevron-down");
+      }
+    });
+  }
+}
+
+// ✅ Fixed toggleDropdown function
+function toggleDropdown(id) {
+  const sidebar = document.getElementById("sidebar");
+  const main = document.getElementById("main");
+  const allDropdowns = document.querySelectorAll(".dropdown-content");
+  const allArrows = document.querySelectorAll(".dropdown-arrow");
+  const targetDropdown = document.getElementById(id);
+  const arrow = targetDropdown?.previousElementSibling?.querySelector(".dropdown-arrow");
+
+  // If sidebar is closed, open it
+  if (sidebar.classList.contains("closed")) {
+    sidebar.classList.remove("closed");
+    main.classList.remove("closed");
+  }
+
+  // Close other dropdowns
+  allDropdowns.forEach(dropdown => {
+    if (dropdown !== targetDropdown) dropdown.classList.remove("open");
+  });
+
+  // Reset all arrows to down
+  allArrows.forEach(icon => {
+    icon.classList.remove("bi-chevron-up");
+    icon.classList.add("bi-chevron-down");
+    
+  });
+
+  // Toggle clicked dropdown
+  targetDropdown.classList.toggle("open");
+  if (targetDropdown.classList.contains("open")) {
+    arrow.classList.remove("bi-chevron-down");
+    arrow.classList.add("bi-chevron-up");
+  }
+}
+
+// ---------- Init ----------
+window.onload = () => {
+  loadStockData();
+  loadTopSoldProducts();
+};
+</script>
+
+</body>
+</html>

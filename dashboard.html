@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background: #f7fafc;
+      color: #2d3748;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    nav.top-nav {
+      background: linear-gradient(to bottom, #002b5c, #004080);
+      color: white;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 40px;
+      position: sticky;
+      top: 0;
+      z-index: 110;
+      font-weight: 600;
+      font-size: 20px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      user-select: none;
+    }
+    nav.top-nav h2 { margin: 0; color: #e2e8f0; font-weight: 700; display:flex; gap:10px; align-items:center; }
+    nav.top-nav button.back-btn {
+      background-color: transparent;
+      color: #e2e8f0;
+      padding: 8px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      position: absolute;
+      right: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    nav.top-nav button.back-btn:hover { background-color: #e2e8f0; color:#2c3e50; transform: translateY(-50%) scale(1.05); }
+     nav.top-nav button.back-btn i {
+      font-size: 30px;
+    }
+h2 { text-align: center; font-weight:700; color:#2d3748; margin-bottom:0; font-size:28px; }
+
+    .container { max-width:1280px; margin:30px auto 60px; padding:0 24px; }
+
+    .stats { display:flex; justify-content:space-between; gap:24px; margin-bottom:50px; flex-wrap:wrap; }
+    .stat-box { flex:1 1 220px; background:white; border-radius:14px; padding:28px 30px; box-shadow:0 12px 20px rgba(30,60,114,0.1); text-align:center; transition:transform .2s; }
+    .stat-box:hover { transform: translateY(-6px); box-shadow:0 16px 30px rgba(30,60,114,0.15); }
+    .stat-title { font-weight:600; font-size:14px; color:#667080; margin-bottom:12px; text-transform:uppercase; }
+    .stat-value { font-size:34px; font-weight:700; color:#1e3c72; user-select:none; }
+
+    .filters { display:flex; justify-content:center; gap:20px; margin-bottom:50px; flex-wrap:wrap; }
+    .filters select { padding:12px 18px; font-size:15px; border-radius:10px; border:1.5px solid #cbd5e1; min-width:150px; background:white; color:#1e3c72; font-weight:600; }
+
+    .charts-grid { display:grid; grid-template-columns: 2.6fr 2.6fr; gap:48px; margin-bottom:60px; }
+    @media (max-width:960px) { 
+      body {
+    padding: 10px;
+  }
+
+  nav.top-nav {
+    justify-content: flex-start; /* Align start */
+    padding: 0 15px;
+  }
+
+  nav.top-nav h2 {
+    margin-right: auto; /* Keep Inventory left */
+    font-size: 16px;
+  }
+
+  nav.top-nav button.back-btn {
+  width: 36px; /* fixed size */
+  height: 36px;
+  border-radius: 70%; /* perfect circle */
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0; /* remove extra space */
+  transition: background-color 0.2s ease;
+  flex-shrink: 0; /* prevent stretching in flexbox */
+}
+
+nav.top-nav button.back-btn i {
+  font-size: 20px; /* icon size */
+  color: #fff;
+}
+
+nav.top-nav button.back-btn:hover {
+  background-color: #606697;
+  color: #21314e; /* small highlight */
+}
+.charts-grid { grid-template-columns:1fr; gap:36px; } }
+
+    .chart-container { background:white; padding:30px 28px; border-radius:22px; box-shadow:0 14px 28px rgba(30,60,114,0.08); height:370px; display:flex; flex-direction:column; justify-content:center; }
+    .pie-chart-container { max-width:520px; margin:0 auto 40px; background:white; padding:32px 28px; border-radius:22px; box-shadow:0 14px 28px rgba(30,60,114,0.1); height:340px; display:flex; flex-direction:column; justify-content:center; text-align:center; }
+    .pie-chart-container h3 { margin-bottom:24px; color:#1e3c72; font-weight:700; font-size:22px; }
+
+    canvas { width:100% !important; height:100% !important; }
+
+    .top-products-list { max-width:520px; margin:8px auto 24px; text-align:left; }
+    .top-products-list .product { padding:10px 12px; border-radius:8px; background:#fff; margin-bottom:8px; box-shadow:0 6px 10px rgba(30,60,114,0.04); }
+    .visually-hidden { position:absolute!important; width:1px!important; height:1px!important; padding:0!important; margin:-1px!important; overflow:hidden!important; clip:rect(0,0,0,0)!important; white-space:nowrap!important; border:0!important; }
+  </style>
+</head>
+<body>
+  <nav class="top-nav" role="banner">
+    <a href="admin2.html"><button class="back-btn"><i class="bi bi-house-door-fill"></i></button></a>
+    <h2><i class="bi bi-speedometer"></i> Sales Dashboard</h2>
+  </nav>
+
+  <main class="container" role="main" aria-label="Sales dashboard overview">
+    <section class="stats" aria-label="Key performance indicators">
+      <div class="stat-box" tabindex="0" role="region" aria-live="polite">
+        <div class="stat-title">Total Sells</div>
+        <div class="stat-value" id="sellsCount">0</div>
+      </div>
+      <div class="stat-box" tabindex="0" role="region" aria-live="polite">
+        <div class="stat-title">Total Invoices</div>
+        <div class="stat-value" id="invoicesCount">0</div>
+      </div>
+      <div class="stat-box" tabindex="0" role="region" aria-live="polite">
+        <div class="stat-title">Total Revenue</div>
+        <div class="stat-value" id="revenueCount">₹0</div>
+      </div>
+      <div class="stat-box" tabindex="0" role="region" aria-live="polite">
+        <div class="stat-title">Out of Stock</div>
+        <div class="stat-value" id="outOfStockCount">0</div>
+      </div>
+    </section>
+
+    <section class="filters" aria-label="Filter sales data">
+      <select id="weekFilter" aria-label="Select Week">
+        <option value="">Select Week</option>
+        <option value="1">Week 1</option>
+        <option value="2">Week 2</option>
+        <option value="3">Week 3</option>
+        <option value="4">Week 4</option>
+      </select>
+
+      <select id="monthFilter" aria-label="Select Month">
+        <option value="">Select Month</option>
+        <option value="0">January</option>
+        <option value="1">February</option>
+        <option value="2">March</option>
+        <option value="3">April</option>
+        <option value="4">May</option>
+        <option value="5">June</option>
+        <option value="6">July</option>
+        <option value="7">August</option>
+        <option value="8">September</option>
+        <option value="9">October</option>
+        <option value="10">November</option>
+        <option value="11">December</option>
+      </select>
+
+      <select id="yearFilter" aria-label="Select Year">
+        <option value="">Select Year</option>
+        <option value="2023">2023</option>
+        <option value="2024">2024</option>
+        <option value="2025">2025</option>
+      </select>
+    </section>
+  </main>
+
+  <div class="charts-grid" aria-label="Sales and Revenue charts">
+    <section class="chart-container" role="region" aria-labelledby="barChartLabel">
+      <h2 id="barChartLabel" class="visually-hidden">Monthly Sales Chart</h2>
+      <canvas id="barChart" role="img" aria-describedby="barChartDesc"></canvas>
+      <p id="barChartDesc" class="visually-hidden">Bar chart showing the number of sells per month.</p>
+    </section>
+
+    <section class="chart-container" role="region" aria-labelledby="lineChartLabel">
+      <h2 id="lineChartLabel" class="visually-hidden">Monthly Revenue Chart</h2>
+      <canvas id="lineChart" role="img" aria-describedby="lineChartDesc"></canvas>
+      <p id="lineChartDesc" class="visually-hidden">Line chart showing the revenue earned per month.</p>
+    </section>
+  </div>
+
+  <div class="container">
+    <section class="pie-chart-container" role="region" aria-labelledby="pieChartLabel">
+      <h3 id="pieChartLabel">Top Sold Products</h3>
+      <div id="topProductsList" class="top-products-list"></div>
+      <canvas id="pieChart" role="img" aria-describedby="pieChartDesc"></canvas>
+      <p id="pieChartDesc" class="visually-hidden">Pie chart showing the distribution of top sold products.</p>
+    </section>
+  </div>
+<script>
+/* ----------------- Utilities ----------------- */
+function safeParseJSON(str, fallback) {
+  try { return JSON.parse(str); } catch (_) { return fallback; }
+}
+
+function parseNumber(v) {
+  if (v === null || v === undefined) return 0;
+  if (typeof v === 'number') return v;
+  if (typeof v === 'string') {
+    const n = parseFloat(v.replace(/[^\d.-]/g,''));
+    return isNaN(n) ? 0 : n;
+  }
+  return 0;
+}
+
+function coerceDate(input) {
+  if (!input) return null;
+  if (input instanceof Date) return isNaN(input.getTime()) ? null : input;
+  const d = new Date(input);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function getWeekOfMonthClamped4(date) {
+  if (!(date instanceof Date)) date = new Date(date);
+  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+  const offset = firstDay.getDay();
+  const week = Math.ceil((date.getDate() + offset) / 7);
+  return Math.min(4, week);
+}
+
+/* ----------------- Stock Helpers ----------------- */
+function getStockValue(item) {
+  const keys = ['stock','qty','quantity','available','onHand','availableStock','currentStock','balance'];
+  for (const k of keys) {
+    if (item && k in item) {
+      const v = parseNumber(item[k]);
+      if (!isNaN(v)) return v;
+    }
+  }
+  return 0;
+}
+
+function getOutOfStockCount(products) {
+  if (!Array.isArray(products)) return 0;
+  return products.filter(p => parseInt(p.stock) === 0).length;
+}
+
+/* ----------------- Bill Helpers ----------------- */
+function getItemName(it) {
+  return (it?.name || it?.productName || it?.title || 'Unnamed').trim().toLowerCase();
+}
+
+function getItemQty(it) {
+  const keys = ['quantity','qty','count','units','unit'];
+  for (const k of keys) if (it && k in it) {
+    const n = parseNumber(it[k]);
+    if (n > 0) return n;
+  }
+  const price = parseNumber(it.price || it.unitPrice || it.rate || it.mrp);
+  const total = parseNumber(it.total || it.lineTotal || it.subtotal);
+  if (price > 0 && total > 0) return Math.round(total / price);
+  return 0;
+}
+
+function getBillTotal(bill) {
+  const keys = ['total','grandTotal','amount','billTotal'];
+  for (const k of keys) if (bill && k in bill) {
+    const n = parseNumber(bill[k]);
+    if (n > 0) return n;
+  }
+  if (Array.isArray(bill.items)) {
+    return bill.items.reduce((sum,it)=>sum+getItemQty(it)*parseNumber(it.price || it.unitPrice || it.rate || it.mrp),0);
+  }
+  return 0;
+}
+
+function getBillDate(bill) {
+  const keys = ['date','billDate','timestamp','createdAt','createdOn','time','dt'];
+  for (const k of keys) if (bill && k in bill) {
+    const d = coerceDate(bill[k]);
+    if (d) return d;
+  }
+  return null;
+}
+
+/* ----------------- Filter Bills ----------------- */
+function filterBillsByDate() {
+  const week = Number(document.getElementById('weekFilter')?.value || 0);
+  const month = document.getElementById('monthFilter')?.value;
+  const year = document.getElementById('yearFilter')?.value;
+  const savedBills = safeParseJSON(localStorage.getItem('savedBills') || '[]', []);
+
+  return savedBills.filter(bill => {
+    const d = getBillDate(bill);
+    if (!d) return false;
+    if (year && d.getFullYear() !== Number(year)) return false;
+    if (month !== "" && d.getMonth() !== Number(month)) return false;
+    if (week && getWeekOfMonthClamped4(d) !== week) return false;
+    return true;
+  });
+}
+
+/* ----------------- Top Products ----------------- */
+function getTopProducts(bills) {
+  const productMap = new Map();
+  bills.forEach(bill => {
+    (bill.items||[]).forEach(it=>{
+      const name = getItemName(it);
+      const qty = getItemQty(it);
+      if (qty>0) productMap.set(name,(productMap.get(name)||0)+qty);
+    });
+  });
+  const productsArr = Array.from(productMap.entries()).map(([name,sold])=>({name,sold}));
+  productsArr.sort((a,b)=>b.sold-a.sold);
+  return productsArr.slice(0,6);
+}
+
+function renderTopProductsList(topProducts) {
+  const el = document.getElementById('topProductsList');
+  if(!el) return;
+  if(!topProducts.length){
+    el.innerHTML = '<p style="margin-top:8px;color:#6b7280">No sales in selected period</p>';
+  } else {
+    el.innerHTML = topProducts.map((p,i)=>`
+      <div class="product">
+        <strong>${i+1}. ${p.name}</strong>
+        <div style="margin-top:6px;color:#374151">Sold: ${p.sold} units</div>
+      </div>`).join('');
+  }
+}
+
+/* ----------------- Charts ----------------- */
+let barChart=null, lineChart=null, pieChart=null;
+function createChartsIfNeeded() {
+  const labels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  if(!barChart){
+    const ctx = document.getElementById('barChart').getContext('2d');
+    barChart = new Chart(ctx,{
+      type:'bar',
+      data:{labels,datasets:[{label:'Sells',data:new Array(12).fill(0),backgroundColor:'#1e3c72',borderRadius:8}]},
+      options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true}}}
+    });
+  }
+
+  if(!lineChart){
+    const ctx = document.getElementById('lineChart').getContext('2d');
+    const grad = ctx.createLinearGradient(0,0,0,400);
+    grad.addColorStop(0,'rgba(33,147,176,0.8)');
+    grad.addColorStop(1,'rgba(109,213,237,0)');
+    lineChart = new Chart(ctx,{
+      type:'line',
+      data:{labels,datasets:[{label:'Revenue',data:new Array(12).fill(0),borderColor:'#2193b0',backgroundColor:grad,fill:true,tension:0.4}]},
+      options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true}}}
+    });
+  }
+
+  if(!pieChart){
+    const ctx = document.getElementById('pieChart').getContext('2d');
+    pieChart = new Chart(ctx,{
+      type:'pie',
+      data:{labels:['No sales'],datasets:[{data:[1],backgroundColor:['#ccc']}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}
+    });
+  }
+}
+
+/* ----------------- Update Dashboard ----------------- */
+function updateDashboard(){
+  createChartsIfNeeded();
+
+  const filteredBills = filterBillsByDate();
+  const products = safeParseJSON(localStorage.getItem('products')||'[]',[]);
+  const invoiceCounter = parseInt(localStorage.getItem('invoiceCounter')||'0',10);
+
+  let totalSells=0, totalRevenue=0;
+  const sellsPerMonth = new Array(12).fill(0);
+  const revenuePerMonth = new Array(12).fill(0);
+  const productSalesMap = new Map();
+
+  filteredBills.forEach(bill=>{
+    const d = getBillDate(bill);
+    if(!d) return;
+    const m = d.getMonth();
+    const total = getBillTotal(bill);
+    totalRevenue += total;
+    revenuePerMonth[m] += total;
+
+    (bill.items||[]).forEach(it=>{
+      const qty = getItemQty(it);
+      if(qty>0){
+        totalSells += qty;
+        sellsPerMonth[m] += qty;
+        const name = getItemName(it);
+        productSalesMap.set(name,(productSalesMap.get(name)||0)+qty);
+      }
+    });
+  });
+
+  // Update stat boxes
+  document.getElementById('sellsCount').textContent = totalSells.toLocaleString();
+  document.getElementById('invoicesCount').textContent = invoiceCounter.toLocaleString();
+  document.getElementById('revenueCount').textContent = `₹${totalRevenue.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+  document.getElementById('outOfStockCount').textContent = getOutOfStockCount(products).toLocaleString();
+
+  // Update charts
+  barChart.data.datasets[0].data = sellsPerMonth;
+  barChart.update();
+
+  lineChart.data.datasets[0].data = revenuePerMonth;
+  lineChart.update();
+
+  const topProducts = Array.from(productSalesMap.entries())
+    .sort((a,b)=>b[1]-a[1])
+    .slice(0,6);
+
+  if(topProducts.length){
+    pieChart.data.labels = topProducts.map(p=>p[0]);
+    pieChart.data.datasets[0].data = topProducts.map(p=>p[1]);
+    pieChart.data.datasets[0].backgroundColor = ['#1e3c72','#2193b0','#33a0d2','#6fbddd','#89c8e9','#b3dff0'];
+  } else {
+    pieChart.data.labels = ['No sales'];
+    pieChart.data.datasets[0].data = [1];
+    pieChart.data.datasets[0].backgroundColor = ['#ccc'];
+  }
+  pieChart.update();
+
+  renderTopProductsList(topProducts.map(([name,sold])=>({name,sold})));
+}
+
+/* ----------------- Event Listeners ----------------- */
+window.addEventListener('load',()=>{
+  ['weekFilter','monthFilter','yearFilter'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('change',updateDashboard);
+  });
+  window.addEventListener('storage',e=>{
+    if(['savedBills','products','invoiceCounter'].includes(e.key)) setTimeout(updateDashboard,100);
+  });
+  updateDashboard();
+});
+
+</script>
+
+
+
+
+</body>
+</html>

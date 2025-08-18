@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WinZone Billing Software</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
+</head>
+<body>
+
+  <!-- 🌌 Hero Section -->
+  <header class="hero">
+    <div class="dark-toggle">
+      <button onclick="toggleDarkMode()">🌙</button>
+    </div>
+    <div class="hero-content">
+      <h1>Smart Billing for Modern Businesses</h1>
+      <p>"Automate. Analyze. Accelerate."</p>
+      <div class="buttons">
+        <a href="" class="btn get-started">Get Started</a>
+        <a href="login.html" class="btn login">Login</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 🚀 Features -->
+  <section id="features">
+    <h2>Features</h2>
+    <div class="grid">
+      <div class="card feature">
+        <i class="fas fa-file-invoice-dollar fa-2x icon"></i>
+        <h3>GST Invoicing</h3>
+        <p>Auto-calculates 18% GST on every bill.</p>
+      </div>
+      <div class="card feature">
+        <i class="fas fa-download fa-2x icon"></i>
+        <h3>PDF Export</h3>
+        <p>One-click download of professional invoices.</p>
+      </div>
+      <div class="card feature">
+        <i class="fas fa-users-cog fa-2x icon"></i>
+        <h3>Admin & User Roles</h3>
+        <p>Dedicated panels for managing products & customers.</p>
+      </div>
+      <div class="card feature">
+        <i class="fas fa-chart-line fa-2x icon"></i>
+        <h3>Analytics Dashboard</h3>
+        <p>Track revenue, sales trends, and performance.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 💰 Pricing -->
+  <section id="pricing">
+    <h2>Pricing</h2>
+    <div class="grid pricing-cards">
+      <div class="card pricing">
+        <h3>Starter</h3>
+        <p class="price">₹499/month</p>
+        <ul>
+          <li><i class="fas fa-check-circle"></i> GST Billing</li>
+          <li><i class="fas fa-check-circle"></i> Product Panel</li>
+          <li><i class="fas fa-check-circle"></i> Export PDF</li>
+        </ul>
+      </div>
+      <div class="card pricing popular">
+        <div class="badge">Most Popular</div>
+        <h3>Pro</h3>
+        <p class="price">₹999/month</p>
+        <ul>
+          <li><i class="fas fa-check-circle"></i> Admin Dashboard</li>
+          <li><i class="fas fa-check-circle"></i> Customer Panel</li>
+          <li><i class="fas fa-check-circle"></i> Reports & Graphs</li>
+        </ul>
+      </div>
+      <div class="card pricing">
+        <h3>Enterprise</h3>
+        <p class="price">₹1999/month</p>
+        <ul>
+          <li><i class="fas fa-check-circle"></i> Unlimited Billing</li>
+          <li><i class="fas fa-check-circle"></i> Custom Modules</li>
+          <li><i class="fas fa-check-circle"></i> Priority Support</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🔻 Footer -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-col">
+        <h3>WinZone Billing</h3>
+        <p>Professional GST billing software built for efficiency and growth. Manage sales, customers, and invoices seamlessly.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="signup.html">Sign Up</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#features">Features</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact Us</h4>
+        <p><i class="fas fa-envelope"></i> support@winzonebilling.com</p>
+        <p><i class="fas fa-phone"></i> +91 98765 43210</p>
+        <p><i class="fas fa-location-dot"></i> Madurai, India</p>
+        <div class="socials">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2025 WinZone Billing Software. All rights reserved.
+    </div>
+  </footer>
+<script>
+    // 🌙 Toggle dark mode
+function toggleDarkMode() {
+  document.body.classList.toggle("dark");
+
+  // Optional: Save preference in localStorage
+  const isDark = document.body.classList.contains("dark");
+  localStorage.setItem("darkMode", isDark ? "enabled" : "disabled");
+}
+
+// ✅ Apply dark mode on load (if stored)
+window.addEventListener("DOMContentLoaded", () => {
+  const storedMode = localStorage.getItem("darkMode");
+  if (storedMode === "enabled") {
+    document.body.classList.add("dark");
+  }
+});
+
+// (📌 Reserved for future billing logic in dashboard)
+
+</script>
+</body>
+</html>
