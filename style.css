@@ -17,7 +17,7 @@ a {
 
 /* Hero */
 .hero {
-  background: linear-gradient(to right, #001f4d, #003366);
+  background: linear-gradient(to right, #00193f, #0f64b9);
   color: #fff;
   padding: 100px 20px 70px;
   text-align: center;
@@ -45,7 +45,7 @@ a {
   right: 20px;
 }
 .dark-toggle button {
-  background: #00ccff;
+  background: #0396ff;
   color: white;
   border: none;
   padding: 8px 14px;
@@ -63,7 +63,7 @@ a {
   border: none;
 }
 .get-started {
-  background-color: #00ccff;
+  background-color: #0396ff;
   color: white;
 }
 .login {
